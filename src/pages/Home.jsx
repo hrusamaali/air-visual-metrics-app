@@ -1,7 +1,18 @@
 // src/pages/Home.jsx
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPollution } from '../redux/pollution/pollutionSlice';
 import MetricCard from '../components/MetricCard';
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const { cities, status, error } = useSelector((state) => state.pollution);
+
+    useEffect(() => {
+        dispatch(fetchPollution({ country: 'USA', state: 'California' }));
+    }, [dispatch]);
+
+
     return (
         <div className="min-h-screen bg-[#ff6b81] text-white">
             {/* Header */}
@@ -12,20 +23,24 @@ const Home = () => {
                 <span className="text-sm opacity-75">2025</span>
             </header>
 
-            {/* Subheading or filter bar (if any) */}
+            {/* Subheading or filter bar */}
             <div className="p-4 text-sm text-right opacity-70">
-                USA (example region)
+                USA
             </div>
+
+            {/* Status */}
+            {status === 'loading' && <p className="p-4 text-center">Loading data...</p>}
+            {status === 'failed' && <p className="p-4 text-center text-red-300">Error: {error}</p>}
 
             {/* Metrics Grid */}
             <section className="p-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {/* Sample static cards (will be dynamic later) */}
-                <MetricCard title="Los Angeles" value="AQI: 123" />
-                <MetricCard title="New York" value="AQI: 98" />
-                <MetricCard title="Chicago" value="AQI: 110" />
-                <MetricCard title="Houston" value="AQI: 145" />
-                <MetricCard title="Phoenix" value="AQI: 88" />
-                <MetricCard title="Philadelphia" value="AQI: 130" />
+                {status === 'succeeded' && cities.map((city, index) => (
+                    <MetricCard
+                        key={index}
+                        title={city.city}
+                        value={`State: ${city.state}`}
+                    />
+                ))}
             </section>
         </div>
     );
