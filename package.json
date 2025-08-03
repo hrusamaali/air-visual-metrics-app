@@ -1,5 +1,5 @@
 {
-  "homepage": "https://your-username.github.io/air-visual-metrics-app",
+  "homepage": "https://hrusamaali.github.io/air-visual-metrics-app",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
